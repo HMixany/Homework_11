@@ -19,7 +19,7 @@ def input_error(func):
 
 @input_error
 def compiling_page(page_number, contacts, total):
-    result = f'\nPage number {page_number + 1} of {total}\n'
+    result = f'\nPage number {page_number} of {total}\n'
     for name, record in contacts.items():
         result += f'{record}\n'
     return result
@@ -101,12 +101,11 @@ def show_all(*args):
             return f'Total pages: {total_page}'
     generator = phonebook.iterator(chunk_size)
     if user_page is None:
-        for page_number, page in enumerate(generator):
+        for page_number, page in enumerate(generator, start=1):
             result += compiling_page(page_number, page, total_page)
     else:
-        for page_number, page in enumerate(generator):
-            if (page_number + 1) == user_page:
-                result = compiling_page(page_number, page, total_page)
+        page = [item for index, item in enumerate(generator, start=1) if index == user_page]
+        result = compiling_page(user_page, page[0], total_page)
 
     return result
 
